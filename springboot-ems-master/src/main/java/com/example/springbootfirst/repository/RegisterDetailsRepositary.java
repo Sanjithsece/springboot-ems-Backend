@@ -11,5 +11,4 @@ public interface RegisterDetailsRepositary extends JpaRepository<RegisterDetails
     RegisterDetails findByEmail(String email);
     Optional<RegisterDetails> findByUsername(String username);
     List<RegisterDetails> findByRolesRoleName(String roleName);
-
 }

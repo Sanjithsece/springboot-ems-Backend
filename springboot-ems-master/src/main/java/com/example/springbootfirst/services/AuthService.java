@@ -38,31 +38,34 @@ public class AuthService {
         registerDetails.setPassword(passwordEncoder.encode(register.getPassword()));
         registerDetails.setUsername(register.getUserName());
 
-
         Set<Roles> roles = new HashSet<>();
-        for (String roleName : register.getRolenames()) {
-            Roles role = rolesRepository.findByRoleName(roleName)
-                    .orElseGet(() -> {
-                        Roles newRole = new Roles();
-                        newRole.setRoleName(roleName);
-                        return rolesRepository.save(newRole);
-                    });
-            roles.add(role);
+        if (register.getRolenames() != null) {
+            for (String roleName : register.getRolenames()) {
+                Roles role = rolesRepository.findByRoleName(roleName)
+                        .orElseGet(() -> {
+                            Roles newRole = new Roles();
+                            newRole.setRoleName(roleName);
+                            return rolesRepository.save(newRole);
+                        });
+                roles.add(role);
+            }
         }
         registerDetails.setRoles(roles);
 
-
         Set<Work> works = new HashSet<>();
-        for (String description : register.getWorkDescriptions()) {
-            Work work = workRepository.findByDescription(description)
-                    .orElseGet(() -> workRepository.save(new Work(0, description)));
-            works.add(work);
+        if (register.getWorkDescriptions() != null) {
+            for (String description : register.getWorkDescriptions()) {
+                Work work = workRepository.findByDescription(description)
+                        .orElseGet(() -> workRepository.save(new Work(0, description)));
+                works.add(work);
+            }
         }
         registerDetails.setWorks(works);
         registerDetailsRepositary.save(registerDetails);
 
-        return "Employee Added Successfully with Work!";
+        return "Employee Added Successfully ";
     }
+
     public String assignWorkToEmployee(int empId, List<String> workDescriptions) {
         RegisterDetails employee = registerDetailsRepositary.findById(empId)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
@@ -74,7 +77,7 @@ public class AuthService {
             works.add(work);
         }
 
-        employee.setWorks(works); // This will replace the old work list
+        employee.setWorks(works);
         registerDetailsRepositary.save(employee);
 
         return "Work assigned successfully to employee ID: " + empId;
@@ -90,7 +93,7 @@ public class AuthService {
             updatedWorks.add(work);
         }
 
-        employee.setWorks(updatedWorks); // Overwrite previous work assignments
+        employee.setWorks(updatedWorks);
         registerDetailsRepositary.save(employee);
 
         return "Employee work updated successfully!";
