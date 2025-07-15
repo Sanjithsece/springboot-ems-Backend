@@ -36,7 +36,7 @@ public class AuthService {
         registerDetails.setName(register.getName());
         registerDetails.setEmail(register.getEmail());
         registerDetails.setPassword(passwordEncoder.encode(register.getPassword()));
-        registerDetails.setUsername(register.getUserName());
+        registerDetails.setUsername(register.getUsername());
 
         Set<Roles> roles = new HashSet<>();
         if (register.getRolenames() != null) {

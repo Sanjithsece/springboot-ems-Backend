@@ -13,7 +13,7 @@ public class UserDetailsDto {
     private String name;
     private String email;
     private String password;
-    private String userName;
+    private String username;
     private Set<String> rolenames;
     private List<String> workDescriptions;
 
