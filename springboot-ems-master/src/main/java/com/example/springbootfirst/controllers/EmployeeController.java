@@ -63,6 +63,10 @@ public class EmployeeController {
         return aus.updateWorkEmployee(empId, workDescriptions);
     }
 
+    public String route() {
+        return "springboot";
+    }
+
 //    @PreAuthorize("hasAnyRole('ADMIN','USER')")
 //    @GetMapping("/")
 //    public String route(){
