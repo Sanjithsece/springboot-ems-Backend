@@ -32,14 +32,5 @@ public class RegisterDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "roleId")
     )
     private Set<Roles> roles;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_works",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "empID"),
-            inverseJoinColumns = @JoinColumn(name = "work_id", referencedColumnName = "workId")
-    )
-    private Set<Work> works;
-
-
-
 
 }
