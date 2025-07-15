@@ -23,7 +23,7 @@ public class RegisterService {
         );
 
         String token = jwtTokenProvider.generateToken(authentication);
-        System.out.println("Generated Token: " + token); // Debug log
+        System.out.println("Generated Token: " + token);
 
         return new JwtResponseDto(token, "Bearer");
     }
