@@ -1,6 +1,8 @@
 package com.example.springbootfirst.services;
 
+import com.example.springbootfirst.jwt.JwtResponseDto;
 import com.example.springbootfirst.jwt.JwtTokenProvider;
+import com.example.springbootfirst.models.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,8 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RegisterService {
@@ -21,25 +23,18 @@ public class RegisterService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
-    public Map<String, Object> authenticateAndGenerateToken(String username, String password) {
+    public JwtResponse authenticateAndGenerateToken(String username, String password) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
 
         String token = jwtTokenProvider.generateToken(authentication);
         User userPrincipal = (User) authentication.getPrincipal();
-        String role = "";
-        for (GrantedAuthority authority : authentication.getAuthorities()) {
-            role = authority.getAuthority();
-            break;
-        }
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("token", token);
-        result.put("username", userPrincipal.getUsername());
-        result.put("role", role);
-      //  result.put("password", password);
+        Set<String> roles = userPrincipal.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
 
-        return result;
+        return new JwtResponse(token,username,roles);
     }
 }

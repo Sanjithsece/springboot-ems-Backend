@@ -1,6 +1,7 @@
     package com.example.springbootfirst.controllers;
 
     import com.example.springbootfirst.jwt.JwtResponseDto;
+    import com.example.springbootfirst.models.JwtResponse;
     import com.example.springbootfirst.models.LoginDetailsDto;
     import com.example.springbootfirst.models.UserDetailsDto;
     import com.example.springbootfirst.models.RegisterDetails;
@@ -28,10 +29,10 @@
         @Autowired
         private RegisterService registerService;
         @PostMapping("/login")
-        public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDetailsDto loginRequest) {
-            Map<String, Object> response = registerService.authenticateAndGenerateToken(
-                    loginRequest.getUsername(), loginRequest.getPassword());
-
+        public ResponseEntity<JwtResponse> login(@RequestBody LoginDetailsDto loginRequest) {
+            JwtResponse response = registerService.authenticateAndGenerateToken(
+                    loginRequest.getUsername(), loginRequest.getPassword()
+            );
             return ResponseEntity.ok(response);
         }
 

@@ -16,5 +16,4 @@ public class UserDetailsDto {
     private String username;
     private Set<String> rolenames;
     private List<String> workDescriptions;
-
 }

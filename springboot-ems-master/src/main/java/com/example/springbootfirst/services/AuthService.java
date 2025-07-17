@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AuthService {
@@ -52,18 +49,20 @@ public class AuthService {
         }
         registerDetails.setRoles(roles);
 
-//        Set<Work> works = new HashSet<>();
-//        if (register.getWorkDescriptions() != null) {
-//            for (String description : register.getWorkDescriptions()) {
-//                Work work = workRepository.findByDescription(description)
-//                        .orElseGet(() -> workRepository.save(new Work(0, description)));
-//                works.add(work);
-//            }
-//        }
- //       registerDetails.setWorks(works);
-        registerDetailsRepositary.save(registerDetails);
+        /*
+        Set<Work> works = new HashSet<>();
+        if (register.getWorkDescriptions() != null) {
+            for (String description : register.getWorkDescriptions()) {
+                Work work = workRepository.findByDescription(description)
+                        .orElseGet(() -> workRepository.save(new Work(0, description)));
+                works.add(work);
+            }
+        }
+        registerDetails.setWorks(works);
+        */
 
-        return "Employee Added Successfully ";
+        registerDetailsRepositary.save(registerDetails);
+        return "Employee Added Successfully";
     }
 
     public String assignWorkToEmployee(int empId, List<String> workDescriptions) {
@@ -77,11 +76,12 @@ public class AuthService {
             works.add(work);
         }
 
-//        employee.setWorks(works);
-        registerDetailsRepositary.save(employee);
+        // employee.setWorks(works);
 
+        registerDetailsRepositary.save(employee);
         return "Work assigned successfully to employee ID: " + empId;
     }
+
     public String updateWorkEmployee(int empId, List<String> workDescriptions) {
         RegisterDetails employee = registerDetailsRepositary.findById(empId)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
@@ -93,26 +93,19 @@ public class AuthService {
             updatedWorks.add(work);
         }
 
-//        employee.setWorks(updatedWorks);
-        registerDetailsRepositary.save(employee);
+        // employee.setWorks(updatedWorks);
 
+        registerDetailsRepositary.save(employee);
         return "Employee work updated successfully!";
     }
 
-
-
     public String authenticate(RegisterDetails login) {
         RegisterDetails user = registerDetailsRepositary.findByEmail(login.getEmail());
-
-        if (user == null) {
-            return "User not found";
-        }
-        if (!passwordEncoder.matches(login.getPassword(), user.getPassword())) {
+        if (user == null) return "User not found";
+        if (!passwordEncoder.matches(login.getPassword(), user.getPassword()))
             return "Wrong Password";
-        }
         return "Login successful username: " + user.getName();
     }
-
 
     public List<RegisterDetails> getMethod() {
         return registerDetailsRepositary.findAll();
@@ -136,7 +129,7 @@ public class AuthService {
 
     public String updateRegisterById(int id, RegisterDetails updatedDetails) {
         RegisterDetails existingUser = registerDetailsRepositary.findById(id)
-                .orElseThrow(() -> new RuntimeException("user not int the id: " + id));
+                .orElseThrow(() -> new RuntimeException("User not found for ID: " + id));
 
         existingUser.setName(updatedDetails.getName());
         existingUser.setEmail(updatedDetails.getEmail());
@@ -149,6 +142,10 @@ public class AuthService {
     }
 
     public String deleteRegisterById(int empID) {
+        RegisterDetails user = registerDetailsRepositary.findById(empID)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.getRoles().clear();
+        registerDetailsRepositary.save(user);
         registerDetailsRepositary.deleteById(empID);
         return "User Deleted Successfully!";
     }
@@ -157,5 +154,21 @@ public class AuthService {
         return registerDetailsRepositary.findByRolesRoleName(roleName);
     }
 
+    public String updateRecord(int empId, UserDetailsDto dto) {
+        Optional<RegisterDetails> employee = registerDetailsRepositary.findById(empId);
+        if (employee.isEmpty()) {
+            return "Employee Not Found";
+        }
 
+        RegisterDetails updated = employee.get();
+        updated.setName(dto.getName());
+        updated.setEmail(dto.getEmail());
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            updated.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+        updated.setUsername(dto.getUsername());
+
+        registerDetailsRepositary.save(updated);
+        return "Employee Updated Successfully";
+    }
 }

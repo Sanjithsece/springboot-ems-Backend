@@ -1,6 +1,7 @@
 package com.example.springbootfirst.controllers;
 
 import com.example.springbootfirst.models.RegisterDetails;
+import com.example.springbootfirst.models.UserDetailsDto;
 import com.example.springbootfirst.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,19 +28,20 @@ public class EmployeeController {
         return aus.getRegisterById(empID);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-        @PostMapping("/employee/add")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/employee/add")
     public String postMethod(@RequestBody RegisterDetails registerDetails) {
         return aus.saveRegister(registerDetails);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/employee/update")
     public String putMethod(@RequestBody RegisterDetails registerDetails) {
         return aus.updateRegister(registerDetails);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/employee/{empID}")
     public String deleteMethod(@PathVariable int empID) {
         return aus.deleteRegisterById(empID);
@@ -51,7 +53,7 @@ public class EmployeeController {
         return aus.getUsersByRole(roleName);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/employee/assign-work/{empId}")
     public String assignWorkToEmployee(@PathVariable int empId, @RequestBody List<String> workDescriptions) {
         return aus.assignWorkToEmployee(empId, workDescriptions);
@@ -61,6 +63,11 @@ public class EmployeeController {
     @PutMapping("/employee/edit-work/{empId}")
     public String updateWorkEmployee(@PathVariable int empId, @RequestBody List<String> workDescriptions) {
         return aus.updateWorkEmployee(empId, workDescriptions);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/employee/{empId}")
+    public String updateRecord(@PathVariable int empId, @RequestBody UserDetailsDto updateDetails){
+        return aus.updateRecord(empId, updateDetails);
     }
 
     public String route() {
