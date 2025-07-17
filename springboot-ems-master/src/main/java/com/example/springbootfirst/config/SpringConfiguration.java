@@ -39,7 +39,7 @@ public class SpringConfiguration {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration corsConfig = new CorsConfiguration();
-                    corsConfig.setAllowedOrigins(List.of("http://localhost:5173","https://springboot-ems-backend.onrender.com/"));
+                    corsConfig.setAllowedOrigins(List.of("http://localhost:5173","https://springboot-frontend.vercel.app//"));
                     corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfig.setAllowedHeaders(List.of("*"));
                     corsConfig.setAllowCredentials(true);
