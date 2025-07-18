@@ -49,7 +49,7 @@ public class AuthService {
         }
         registerDetails.setRoles(roles);
 
-        /*
+
         Set<Work> works = new HashSet<>();
         if (register.getWorkDescriptions() != null) {
             for (String description : register.getWorkDescriptions()) {
@@ -59,7 +59,7 @@ public class AuthService {
             }
         }
         registerDetails.setWorks(works);
-        */
+
 
         registerDetailsRepositary.save(registerDetails);
         return "Employee Added Successfully";
@@ -76,7 +76,7 @@ public class AuthService {
             works.add(work);
         }
 
-        // employee.setWorks(works);
+        employee.setWorks(works);
 
         registerDetailsRepositary.save(employee);
         return "Work assigned successfully to employee ID: " + empId;
@@ -93,7 +93,7 @@ public class AuthService {
             updatedWorks.add(work);
         }
 
-        // employee.setWorks(updatedWorks);
+        employee.setWorks(updatedWorks);
 
         registerDetailsRepositary.save(employee);
         return "Employee work updated successfully!";
